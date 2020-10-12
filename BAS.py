@@ -1,15 +1,15 @@
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from tkinter.ttk import *
-from time import strftime 
 from PIL import ImageTk,Image
-# import time
-from time import time
+from time import time , strftime
 import pyttsx3
 from datetime import datetime
 from tkinter import messagebox
 from tkcalendar import Calendar, DateEntry
 from tkinter import ttk
+from plyer import notification
+import os 
 
 def exhelp():
     top=Toplevel()
@@ -74,13 +74,9 @@ def exhelp():
     status.grid(row=1,column=0,columnspan=3,sticky=W+E)
 
 
-def NewFile():
-    print("New File!")
 def OpenFile():
     name = askopenfilename()
     print(name)
-def About():
-    print("This is a simple example of a menu")
 
 def times(): 
     string = strftime('%H:%M:%S %p') 
@@ -92,6 +88,7 @@ def popup():
 
     
 if __name__ == "__main__":
+    
     init_water=time()
     init_eye=time()
     eye_interval=45
@@ -122,6 +119,21 @@ if __name__ == "__main__":
             init_water=time()
             workComplete=Button(root,text="Work Completed",command=lambda:log_now("Drank Water","jay prakash")).place(height=50,width=100,x=50,y=350)
         root.after(1000, gettime)
+
+    def checkImportantReminder(): 
+	    fileName = open("./remind.txt", 'r') 
+	    today = strftime('%y-%m-%d') 
+	    flag = 0
+	    for line in fileName: 
+	    	if today in line: 
+	    		line = line.split(' ') 
+	    		flag =1
+	    		notification.notify(
+	    		title = line[2],
+	    		message = "Hello Sir Today Important Reminder is "+line[1]+" "+line[2],
+	    		app_icon = "./image/clock.ico",
+	    		timeout= 10
+	    		)
 
     def newreminder():
 
@@ -181,5 +193,6 @@ if __name__ == "__main__":
     cstatus=Label(root,font=('calibri',20,'bold'),text="Currest Status").place(height=50,width=250,x=50,y=300)
     workComplete=Button(root,text="Work Completed").place(height=50,width=100,x=50,y=350)
     exit=Button(root,text="Exit",command=root.destroy).place(height=50,width=100,x=200,y=350)
+    checkImportantReminder()
     root.after(1000, gettime)
     root.mainloop()
